@@ -104,18 +104,18 @@ public class CfgLeftRecElim {
 			for(int j = 0; j < i; j ++){
 				ArrayList<String> toBeReplaced = new ArrayList<>();
 				for(String rule : rules.get(variables.get(i))){
-					if(rule.charAt(0) == variables.get(j).charAt(0)){
+					if(rule.charAt(0) != variables.get(j).charAt(0)){
 						toBeReplaced.add(rule);
+					} else {
+						String temp = rule.substring(1);
+						for(String originalRule : rules.get(variables.get(j))){
+							String modifiedRule = originalRule + temp;
+							toBeReplaced.add(modifiedRule);
+						}
 					}
 				}
-				rules.get(variables.get(i)).removeAll(toBeReplaced);
-				for(String rule : toBeReplaced){
-					rule = rule.substring(1);
-					for(String originalRule : rules.get(variables.get(j))){
-						String modifiedRule = originalRule + rule;
-						rules.get(variables.get(i)).add(modifiedRule);
-					}
-				}
+				rules.get(variables.get(i)).clear();
+				rules.get(variables.get(i)).addAll(toBeReplaced);
 			}
 
 			////////////////////////Immediate Left Recursion////////////////////////////////
