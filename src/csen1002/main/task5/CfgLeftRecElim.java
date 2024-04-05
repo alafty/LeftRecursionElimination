@@ -1,6 +1,7 @@
 package csen1002.main.task5;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -42,58 +43,40 @@ public class CfgLeftRecElim {
 
 
 		eliminateLeftRecursion();
-		//	RemoveImmediateLeftRecursion();
 		System.out.println(variables);
 		System.out.println(terminals);
 		System.out.println(rules);
 	}
-
-	public void RemoveImmediateLeftRecursion() {
-		ArrayList<String> newVars = new ArrayList<>();
-		for(String var: rules.keySet()) {
-			ArrayList<String> tempRules = new ArrayList<>();
-			for(String rule : rules.get(var)){
-				if(rule.charAt(0) == var.charAt(0)){
-					tempRules.add(rule);
-				}
-			}
-			if(!tempRules.isEmpty()) {
-				//remove all rules that start with the same var
-				rules.get(var).removeAll(tempRules);
-				//create a new var
-				String varDash = var + "'";
-				newVars.add(varDash);
-				//ammend the existing rules with var dash at the end
-				ArrayList<String> amendedRules = new ArrayList<>();
-				for(String rule : rules.get(var)){
-					rule += varDash	;
-					amendedRules.add(rule);
-				}
-				rules.get(var).clear();
-				rules.get(var).addAll(amendedRules);
-				//remove the first var and add the var dash at the end
-				for(int i = 0; i <tempRules.size(); i++){
-					String temp = tempRules.get(i).substring(1);
-					temp += varDash;
-					tempRules.remove(i);
-					tempRules.add(temp);
-				}
-				tempRules.add("e");
-				newRules.put(varDash, tempRules);
-			}
-		}
-		rules.putAll(newRules);
-		variables.addAll(newVars);
-	}
-
 	/**
 	 * @return Returns a formatted string representation of the CFG. The string
 	 *         representation follows the one in the task description
 	 */
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return null;
+		String returnString = "";
+
+		for(String var : variables){
+			returnString += var + ";";
+		}
+		returnString = returnString.substring(0, returnString.length() - 1);
+		returnString += "#";
+
+		for(String terminal : terminals){
+			returnString += terminal + ";";
+		}
+		returnString = returnString.substring(0, returnString.length() - 1);
+		returnString += "#";
+
+		for(String key : variables){
+			returnString += key + "/";
+			for(String rule : rules.get(key)){
+				returnString += rule + ",";
+			}
+			returnString = returnString.substring(0, returnString.length() - 1);
+			returnString += ";";
+		}
+
+		return returnString.substring(0, returnString.length() - 1);
 	}
 
 	/**
@@ -130,6 +113,7 @@ public class CfgLeftRecElim {
 				rules.get(variables.get(i)).removeAll(tempRules);
 				//create a new var
 				String varDash = variables.get(i) + "'";
+				variables.add(varDash);
 				//amend the existing rules with var dash at the end
 				ArrayList<String> amendedRules = new ArrayList<>();
 				for(String rule : rules.get(variables.get(i))){
@@ -154,6 +138,8 @@ public class CfgLeftRecElim {
 	public static void main (String[] args){
 		String test1 = "S;T;L#a;b;c;d;i#S/ScTi,La,Ti,b;T/aSb,LabS,i;L/SdL,Si";
 		CfgLeftRecElim test = new CfgLeftRecElim(test1);
+		System.out.println(test);
+		System.out.println(test.toString().equals("S;T;L;S';L'#a;b;c;d;i#S/LaS',TiS',bS';T/aSb,LabS,i;L/aSbiS'dLL',iiS'dLL',bS'dLL',aSbiS'iL',iiS'iL',bS'iL';S'/cTiS',e;L'/aS'dLL',abSiS'dLL',aS'iL',abSiS'iL',e"));
 
 	}
 
