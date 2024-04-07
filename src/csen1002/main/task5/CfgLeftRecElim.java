@@ -8,9 +8,9 @@ import java.util.List;
 /**
  * Write your info here
  *
- * @name Jane Smith
- * @id 49-0234
- * @labNumber 06
+ * @name Mohamed Moustafa
+ * @id 49-3603
+ * @labNumber 21
  */
 
 public class CfgLeftRecElim {
